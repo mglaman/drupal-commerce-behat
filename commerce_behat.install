@@ -1,0 +1,102 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Commerce deploy installation profile.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function commerce_behat_install() {
+  // Provide default country for Addressfield to default on.
+  variable_set('site_default_country', 'US');
+  $instance = field_info_instance('commerce_customer_profile', 'commerce_customer_address', 'billing');
+  $instance['widget']['settings']['default_country'] = 'US';
+
+  // Allow any user to view products
+  $basic_permissions = array(
+    'view any commerce_product entity',
+    'access checkout',
+  );
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, $basic_permissions);
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, $basic_permissions);
+
+  // Generate a product display content type
+  $behat_product_display = array(
+    'type' => 'behat_behat_product_display',
+    'name' => st('Product display'),
+    'base' => 'node_content',
+    'description' => st('Use product displays for adding product pages to your store'),
+    'custom' => 1,
+    'modified' => 1,
+    'locked' => 0,
+  );
+  $behat_product_display = node_type_set_defaults($behat_product_display);
+  node_type_save($behat_product_display);
+  node_add_body_field($behat_product_display);
+
+  // Add a product reference field that uses Inline Entity Form.
+  // This field name changed early in development.
+  //  See https://www.drupal.org/node/2298111.
+  $field_name = 'field_product';
+  $entity_type = 'node';
+  $bundle = 'behat_product_display';
+  $label = 'Products';
+
+  commerce_activate_field($field_name);
+  field_cache_clear();
+
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'commerce_product_reference',
+      'cardinality' => -1,
+      'entity_types' => array($entity_type),
+      'translatable' => FALSE,
+      'locked' => FALSE,
+    );
+    $field = field_create_field($field);
+  }
+
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+
+      'label' => $label,
+      'required' => TRUE,
+      'settings' => array(),
+
+      'widget' => array(
+        'type' => 'inline_entity_form',
+        'weight' => 0,
+        'settings' => array(
+          'type_settings' => array(
+            'allow_bulk_create' => 1,
+          ),
+        ),
+      ),
+
+      'display' => array(
+        'display' => array(
+          'label' => 'hidden',
+          'weight' => 5,
+          'type' => 'commerce_cart_add_to_cart_form',
+          'settings' => array(
+            'show_quantity' => FALSE,
+            'default_quantity' => 1,
+            'combine' => TRUE,
+            'show_single_product_attributes' => FALSE,
+            'line_item_type' => 'product',
+          ),
+          'module' => 'commerce_cart',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}

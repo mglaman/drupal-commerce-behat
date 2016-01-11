@@ -1,0 +1,6 @@
+name = Commerce Behat
+description = Provides Behat integration and testing items
+core = 7.x
+package = Commerce (testing)
+dependencies[] = commerce
+hidden = 1

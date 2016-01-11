@@ -1,0 +1,4 @@
+tests/bin
+tests/vendor
+tests/behat.yml
+tests/failures
