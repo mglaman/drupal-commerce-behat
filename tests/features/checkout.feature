@@ -4,8 +4,9 @@ Feature: Access checkout
   Which allows me to purchase the product
 
   @api
-  Scenario: Add product to cart as an anonymous user
+  Scenario: Add product to cart as an anonymous user, with checkout enabled.
     Given I am an anonymous user
+      And anonymous checkout is enabled
     When I am viewing a "behat_product_display" and product of "product" with the title "Behat Product"
     Then I should see "Behat Product"
       And I press "Add to cart"
@@ -28,3 +29,18 @@ Feature: Access checkout
     # @todo: Open ticket to change last page button to "finish"
     When I press "Continue to next step"
       Then I should see "Checkout complete"
+
+  @api
+  Scenario: Add product to cart as an anonymous user, with checkout disabled.
+    Given I am an anonymous user
+      And anonymous checkout is disabled
+    When I am viewing a "behat_product_display" and product of "product" with the title "Behat Product"
+    Then I should see "Behat Product"
+      And I press "Add to cart"
+      Then I should see "Behat Product added to your cart."
+    When I click "your cart"
+      Then I should see the heading "Shopping cart"
+      And I should see the link "Behat Product"
+    When I go to "checkout"
+      Then I should get a "403" HTTP response
+
