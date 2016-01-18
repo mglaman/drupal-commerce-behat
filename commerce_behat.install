@@ -13,14 +13,6 @@ function commerce_behat_install() {
   $instance = field_info_instance('commerce_customer_profile', 'commerce_customer_address', 'billing');
   $instance['widget']['settings']['default_country'] = 'US';
 
-  // Allow any user to view products
-  $basic_permissions = array(
-    'view any commerce_product entity',
-    'access checkout',
-  );
-  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, $basic_permissions);
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, $basic_permissions);
-
   // Generate a product display content type
   $behat_product_display = array(
     'type' => 'behat_behat_product_display',

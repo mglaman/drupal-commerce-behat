@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide Behat step-definitions for Drupal Commerce.
- *
- * @todo: Move into Commerce project :D
+ * Provide Behat step-definitions for Commerce Product.
  */
 
 use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
@@ -12,7 +10,7 @@ use Drupal\DrupalDriverManager;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Hook\Scope\AfterNodeCreateScope;
 
-class CommerceSubContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class CommerceProductContext extends DrupalSubContextBase implements DrupalSubContextInterface {
   /**
    * Contains the DrupalDriverManager.
    *
