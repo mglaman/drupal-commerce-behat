@@ -26,10 +26,26 @@ class CommerceProductContext extends DrupalSubContextBase implements DrupalSubCo
   protected $products = array();
 
   /**
+   * The name of the product reference field on the product display node.
+   *
+   * @var string
+   */
+  protected $productReferenceFieldName = 'field_product';
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(DrupalDriverManager $drupal) {
     $this->drupal = $drupal;
+  }
+
+  /**
+   * Provide the name of the product reference field.
+   *
+   * @Given my product reference field is :field_name
+   */
+  public function myProductReferenceField($field_name) {
+    $this->productReferenceFieldName = $field_name;
   }
 
   /**
@@ -51,14 +67,14 @@ class CommerceProductContext extends DrupalSubContextBase implements DrupalSubCo
       'title' => $title,
       'type' => $nodeType,
       'body' => $this->getRandom()->string(255),
-      'field_product' => $product->product_id
+      $this->productReferenceFieldName => $product->product_id
     );
     $saved = $this->nodeCreate($node);
 
     // @todo: Get AfterNodeCreateScope below working.
-    $product_id = $saved->{'field_product'}[LANGUAGE_NONE][0]['value'];
-    unset($saved->{'field_product'}[LANGUAGE_NONE][0]['value']);
-    $saved->{'field_product'}[LANGUAGE_NONE][0]['product_id'] = $product_id;
+    $product_id = $saved->{$this->productReferenceFieldName}[LANGUAGE_NONE][0]['value'];
+    unset($saved->{$this->productReferenceFieldName}[LANGUAGE_NONE][0]['value']);
+    $saved->{$this->productReferenceFieldName}[LANGUAGE_NONE][0]['product_id'] = $product_id;
     // We have to re-save here because scope hook is being weird.
     node_save($saved);
 
@@ -99,10 +115,11 @@ class CommerceProductContext extends DrupalSubContextBase implements DrupalSubCo
    */
   public function fixProductReferenceField(AfterNodeCreateScope $scope) {
     $entity = $scope->getEntity();
-    if (isset($entity->{'field_product'}) && !empty($entity->{'field_product'}[LANGUAGE_NONE])) {
-      $product_id = $entity->{'field_product'}[LANGUAGE_NONE][0]['value'];
-      unset($entity->{'field_product'}[LANGUAGE_NONE][0]['value']);
-      $entity->{'field_product'}[LANGUAGE_NONE][0]['product_id'] = $product_id;
+    if (isset($entity->{$this->productReferenceFieldName}) && !empty($entity->{$this->productReferenceFieldName}[LANGUAGE_NONE])) {
+      $product_id = $entity->{$this->productReferenceFieldName}[LANGUAGE_NONE][0]['value'];
+      unset($entity->{$this->productReferenceFieldName}[LANGUAGE_NONE][0]['value']);
+      $entity->{$this->productReferenceFieldName}[LANGUAGE_NONE][0]['product_id'] = $product_id;
     }
   }
+
 }
