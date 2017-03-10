@@ -1,16 +1,13 @@
 <?php
 
-/**
- * @file
- * Provide Behat step-definitions for Commerce Checkout.
- */
+namespace Drupal\CommerceBehat\Context;
 
 use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
 use Drupal\DrupalDriverManager;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Hook\Scope\AfterNodeCreateScope;
 
-class CommerceCheckoutContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class DrupalCommerceCheckoutContext extends DrupalSubContextBase implements DrupalSubContextInterface {
   /**
    * Contains the DrupalDriverManager.
    *

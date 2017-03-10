@@ -1,0 +1,30 @@
+default:
+  suites:
+    default:
+      contexts:
+        - Drupal\DrupalExtension\Context\ConfigContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MarkupContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\CommerceBehat\Context\DrupalCommerceContext
+        - Drupal\CommerceBehat\Context\DrupalCommerceCheckoutContext
+        - Drupal\CommerceBehat\Context\DrupalCommerceProductContext
+  extensions:
+    Behat\MinkExtension:
+      base_url: "http://localhost:8888/"
+      goutte: ~
+      selenium2:
+        browser: phantomjs
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: "drupal"
+      drush_driver: "drush"
+      region_map:
+        Help: ".region-help"
+        Tabs: ".tabs"
+        Content: ".region-content"
+      drupal:
+        drupal_root: "$TRAVIS_BUILD_DIR/../drupal"
+      drush:
+        root: "$TRAVIS_BUILD_DIR/../drupal"

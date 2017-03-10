@@ -1,16 +1,13 @@
 <?php
 
-/**
- * @file
- * Provide Behat step-definitions for Commerce Product.
- */
+namespace Drupal\CommerceBehat\Context;
 
 use Drupal\DrupalExtension\Context\DrupalSubContextInterface;
 use Drupal\DrupalDriverManager;
 use Drupal\DrupalExtension\Context\DrupalSubContextBase;
 use Drupal\DrupalExtension\Hook\Scope\AfterNodeCreateScope;
 
-class CommerceProductContext extends DrupalSubContextBase implements DrupalSubContextInterface {
+class DrupalCommerceProductContext extends DrupalSubContextBase implements DrupalSubContextInterface {
   /**
    * Contains the DrupalDriverManager.
    *
